@@ -10,8 +10,8 @@ function mem(d, x=nothing)
   μs = map(comp->mean(comp), comps);
   σs = map(comp->std(comp), comps);
   
-  function mem_search(d, x)
-    Loop = 1000;
+  function mem_search(d, x, N=10)
+    Loop = 100;
     EPS = 10e-7;
 
     for i in 1:Loop
@@ -49,7 +49,6 @@ function mem(d, x=nothing)
   end
 
   if x == nothing
-    N = 10;
     xs = rand(d, N);
     modes = map(x->mem_search(d,x), xs);
     pdfs = pdf.(d, modes);

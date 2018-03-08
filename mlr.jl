@@ -1,12 +1,16 @@
 using Distributions;
 include("mem.jl");
 
-function mlr(y, X)
+function mlr(y, X, h=nothing, β=nothing)
   EPS = 10e-4;
   Loop = 100;
   N = length(y); p = 0;
-  β = inv(X'*X)*X'*y;
-  h = 1.144 * std(y-X*β) /(N^(1/5));
+  if β == nothing
+    β = inv(X'*X)*X'*y;
+  end
+  if h == nothing
+    h = 1.144 * std(y-X*β) /(N^(1/5));
+  end
   Q = rand(N);
 
   function Φ(z)
@@ -49,24 +53,7 @@ function mlr(y, X)
     βnxt = inv(X'*W*X)*X'*W*y;
     ε = y - X*βnxt;
     ## optimize h
-    errdist = MixtureModel(
-      Normal,
-      map(x->(x,h), ε),
-      map(i->1/N, 1:N)
-    );
-    m = mem(errdist);
-    # z_i = \frac{ε_i - m}{h}
-    z = (ε .- m) ./ h;
-    G = g.(z, h);
-    DDDG = dddg.(z,h);
-    GW = mapreduce(i->X[i,:] .* G[i], hcat, 1:N);
-    L = (GW * GW') ./ N;
-    K = (X' * DDDG) ./ N;
-    v2 = 1;
-    h = ( (3*v2*(p+1))/(dot(K, inv(L)*K) .* N) )^(1/7);
-    # h = sqrt(dot(ε, Q .* ε));
-    # println("h: " * string(h));
-    
+    h = 1.144 * std(ε) /(N^(1/5));
 
     # judge
     if norm(βnxt-β) < EPS
