@@ -3,14 +3,14 @@ srand(100);
 
 # ひとまずGMMを想定して実装
 # 詳しい計算はpdf『MEMAlgorithm.pdf』を参照
-function mem(d, x=nothing)
+function mem(d, x=nothing, N=30)
   comps = components(d);
   prior = probs(d);
   K = length(prior);
   μs = map(comp->mean(comp), comps);
   σs = map(comp->std(comp), comps);
   
-  function mem_search(d, x, N=10)
+  function mem_search(d, x)
     Loop = 100;
     EPS = 10e-7;
 

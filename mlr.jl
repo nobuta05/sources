@@ -1,9 +1,7 @@
 using Distributions;
 include("mem.jl");
 
-function mlr(y, X, h=nothing, β=nothing)
-  EPS = 10e-4;
-  Loop = 100;
+function mlr(y, X::Array{Float64,2}, β=nothing, h=nothing)
   N = length(y); p = 0;
   if β == nothing
     β = inv(X'*X)*X'*y;
@@ -22,12 +20,6 @@ function mlr(y, X, h=nothing, β=nothing)
   function dΦh(z,h)
     return -z/(h^2) * Φh(z,h);
   end
-  function g(z,h)
-    return Φh(z,h);
-  end
-  function dddg(z,h)
-    return (3*z - z^3) * Φh(z,h) / (h^3);
-  end
   
   # get number of data and variables
   if ndims(X) > 1
@@ -36,6 +28,8 @@ function mlr(y, X, h=nothing, β=nothing)
     N = length(X);
     p = 1;
   end
+  EPS = 10e-8/N;
+  Loop = 300;
 
   for l in 1:Loop
     if l == Loop
