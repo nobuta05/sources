@@ -3,7 +3,7 @@ srand(100);
 
 # ひとまずGMMを想定して実装
 # 詳しい計算はpdf『MEMAlgorithm.pdf』を参照
-function mem(d, x=nothing, N=30)
+function mem(d::Sampleable, x=nothing, N::Int64=10)
   comps = components(d);
   prior = probs(d);
   K = length(prior);
@@ -50,6 +50,7 @@ function mem(d, x=nothing, N=30)
 
   if x == nothing
     xs = rand(d, N);
+    modes = zeros(N);
     modes = map(x->mem_search(d,x), xs);
     pdfs = pdf.(d, modes);
     ind = sortperm(pdfs, rev=true)[1];

@@ -1,15 +1,16 @@
-using Distributions;
-include("mem.jl");
-
-function mlr(y, X::Array{Float64,2}, β=nothing, h=nothing)
-  N = length(y); p = 0;
+function mlr(y::Array{Float64,1}, X::Array{Float64,2}, β=nothing)
+  (N,p) = size(X);
   if β == nothing
     β = inv(X'*X)*X'*y;
   end
-  if h == nothing
-    h = 1.144 * std(y-X*β) /(N^(1/5));
-  end
-  Q = rand(N);
+  h = 1.144 * std(y-X*β) / (N^(0.2));
+
+  Q = zeros(N);
+  ε = zeros(N);
+  W = zeros(N,N);
+  βnxt = zeros(p);
+  const EPS = 10e-7/N;
+  const Loop = 100;
 
   function Φ(z)
     return exp(-0.5*z^2)/sqrt(2π)
@@ -17,44 +18,29 @@ function mlr(y, X::Array{Float64,2}, β=nothing, h=nothing)
   function Φh(z,h)
     return Φ(z/h)/h;
   end
-  function dΦh(z,h)
-    return -z/(h^2) * Φh(z,h);
-  end
-  
-  # get number of data and variables
-  if ndims(X) > 1
-    (N, p) = size(X);
-  else
-    N = length(X);
-    p = 1;
-  end
-  EPS = 10e-8/N;
-  Loop = 300;
 
   for l in 1:Loop
-    if l == Loop
-      println("Last");
-    end
-    ε = y - X*β;
+    ε .= y .- X*β;
 
     # e-step
-    Q = Φh.(ε, h) |> vec;
-    Q = Q ./ sum(Q);
+    Q .= Φh.(ε, h);
+    Q .= Q ./ sum(Q);
 
     # m-step
-    W = diagm(Q);
+    # W .= diagm(Q);
     ## optimize β
-    βnxt = inv(X'*W*X)*X'*W*y;
-    ε = y - X*βnxt;
+    # βnxt .= (X'*W*X)\(X'*W*y);
+    βnxt .= (X'*(X.*Q)) \ (X'*(Q.*y));
+    ε .= y .- X*βnxt;
     ## optimize h
-    h = 1.144 * std(ε) /(N^(1/5));
+    h = 1.144 * std(ε) / (N^(0.2));
 
     # judge
     if norm(βnxt-β) < EPS
-      β = βnxt;
+      β .= βnxt;
       break;
     else
-      β = βnxt;
+      β .= βnxt;
     end
   end
 
