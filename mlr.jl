@@ -29,7 +29,7 @@ end
 function d3g(ε,m,hε)
   return K((ε-m)/hε)*( 3-((ε-m)/hε)^2 )*((ε-m)/hε)/(hε^4);
 end
-function hopt(εs,m,hε,X)
+function hopt(εs,m,hε,X,p)
   N = length(εs);
   K = mapreduce(i->X[i,:].*d3g(εs[i],m,hε), +, 1:N)./N;
   L = mapreduce(i->X[i,:]*X[i,:]'.*g(εs[i],m,hε), +, 1:N)./N;
@@ -45,10 +45,10 @@ function mlr_origin(y::Array{Float64,1}, X::Array{Float64,2}, βinit=nothing)
     β = βinit[:];
   end
   ε = y-X*β;
-  hε = 1.144 * mad(ε) / (N^(0.2));
+  hε = 1.144 * std(ε) / (N^(0.2));
   m = mem(estimated(ε,hε));
 
-  h = hopt(ε,m,hε,X);
+  h = hopt(ε,m,hε,X,p);
   Q = zeros(N);
   W = zeros(N,N);
   βnxt = zeros(p);
@@ -74,9 +74,9 @@ function mlr_origin(y::Array{Float64,1}, X::Array{Float64,2}, βinit=nothing)
     βnxt .= (X'*(X.*Q)) \ (X'*(Q.*y));
     ε .= y .- X*βnxt;
     ## optimize h
-    hε = 1.144 * mad(ε) / (N^(0.2));
+    hε = 1.144 * std(ε) / (N^(0.2));
     m = mem(estimated(ε,hε));
-    h = hopt(ε,m,hε,X);
+    h = hopt(ε,m,hε,X,p);
 
     # judge
     if norm(βnxt-β) < EPS
