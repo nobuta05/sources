@@ -15,10 +15,6 @@ function mem(d::Sampleable, x=nothing, N::Int64=10)
     EPS = 10e-7;
 
     for i in 1:Loop
-      if i==Loop
-        println("Last");
-      end
-
       # E-Step
       ps = map(l->pdf(comps[l], x), 1:K) ./ pdf(d, x);
       # M-Step
