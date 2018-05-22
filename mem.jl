@@ -5,7 +5,7 @@ srand(100);
 # 詳しい計算はpdf『MEMAlgorithm.pdf』を参照
 
 # function mem(d::Sampleable, x=nothing, N::Int64=10)
-function mem(d, x=nothing, N::Int64=5)
+function mem(d, x=nothing, N::Int64=30)
   comps = components(d);
   prior = probs(d);
   K = length(prior);

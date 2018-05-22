@@ -1,10 +1,12 @@
 using StatsBase, Distributions;
+include("/home/nobuta05/Gits/sources/derivatives_gaussian.jl");
 include("/home/nobuta05/Gits/sources/mem.jl");
 
 function generate(N=500)
   β = [0;2];
   xd = Uniform(-5,5);
-  ed = MixtureModel(Normal,[(0.0,1.0),(5.0,5.0)],[0.3,0.7]);
+  mode_ed = 0.02426779526511704;
+  ed = MixtureModel(Normal,[(0.0-mode_ed,1.0),(5.0-mode_ed,5.0)],[0.3,0.7]);
   X = hcat(ones(N), rand(xd,N));
   return (β,X,ed);
 end
@@ -74,9 +76,12 @@ function mlr_origin(y::Array{Float64,1}, X::Array{Float64,2}, βinit=nothing)
     βnxt .= (X'*(X.*Q)) \ (X'*(Q.*y));
     ε .= y .- X*βnxt;
     ## optimize h
-    hε = 1.144 * std(ε) / (N^(0.2));
+    # hε = 1.144 * std(ε) / (N^(0.2));
+    hε = diffusion_h(ε);
+    println("\thε: $(hε)");
     m = mem(estimated(ε,hε));
     h = hopt(ε,m,hε,X,p);
+    println("h: $(h)");
 
     # judge
     if norm(βnxt-β) < EPS
