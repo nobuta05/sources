@@ -29,7 +29,6 @@ function mem(d, x=nothing, N::Int64=30)
 
       if norm(xnxt - x) < EPS
         x = xnxt;
-        println("loop:\t"*string(i));
         break;
       else
         x = xnxt;
