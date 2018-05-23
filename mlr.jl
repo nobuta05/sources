@@ -16,9 +16,6 @@ function estimated(εs,h)
   return MixtureModel(Normal, map(ε->(ε,h),εs),map(i->1/n, 1:n))
 end
 
-# X,εs,m,Nは関数外で計算済みと仮定
-# hε = 1.144 * std(εs) / (N^(0.2));
-
 function K(z)
   return exp(-z*z*0.5)/sqrt(2π);
 end
@@ -55,7 +52,7 @@ function mlr_origin(y::Array{Float64,1}, X::Array{Float64,2}, βinit=nothing)
   W = zeros(N,N);
   βnxt = zeros(p);
   const EPS = 10e-8/N;
-  const Loop = 100;
+  const Loop = 500;
 
   function Φ(z)
     return exp(-0.5*z^2)/sqrt(2π)
@@ -108,7 +105,7 @@ function mlr(y::Array{Float64,1}, X::Array{Float64,2}, βinit=nothing)
   W = zeros(N,N);
   βnxt = zeros(p);
   const EPS = 10e-8/N;
-  const Loop = 100;
+  const Loop = 500;
 
   function Φ(z)
     return exp(-0.5*z^2)/sqrt(2π)
@@ -160,7 +157,7 @@ function mlr_mad(y::Array{Float64,1}, X::Array{Float64,2}, βinit=nothing)
   W = zeros(N,N);
   βnxt = zeros(p);
   const EPS = 10e-8/N;
-  const Loop = 100;
+  const Loop = 500;
 
   function Φ(z)
     return exp(-0.5*z^2)/sqrt(2π)
@@ -212,7 +209,7 @@ function mlr_hfix(y::Array{Float64,1}, X::Array{Float64,2}, h, βinit=nothing)
   W = zeros(N,N);
   βnxt = zeros(p);
   const EPS = 10e-8/N;
-  const Loop = 100;
+  const Loop = 500;
 
   function Φ(z)
     return exp(-0.5*z^2)/sqrt(2π)
@@ -262,7 +259,7 @@ function mlr_hs(y::Array{Float64,1}, X::Array{Float64,2}, hsinit::Array{Float64,
   W = zeros(N,N);
   βnxt = zeros(p);
   const EPS = 10e-8/N;
-  const Loop = 100;
+  const Loop = 500;
 
   function Φ(z)
     return exp(-0.5*z^2)/sqrt(2π)
@@ -315,7 +312,7 @@ function mlr_hs_comp(y::Array{Float64,1}, X::Array{Float64,2}, hsinit::Array{Flo
   W = zeros(N,N);
   βnxt = zeros(p);
   const EPS = 10e-8/N;
-  const Loop = 100;
+  const Loop = 500;
 
   function Φ(z)
     return exp(-0.5*z^2)/sqrt(2π)
