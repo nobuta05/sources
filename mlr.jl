@@ -1,5 +1,5 @@
 using StatsBase, Distributions;
-include("/home/nobuta05/Gits/sources/derivatives_gaussian.jl");
+include("/home/nobuta05/Gits/sources/diffusion.jl");
 include("/home/nobuta05/Gits/sources/mem.jl");
 
 function generate(N=500)
@@ -41,7 +41,7 @@ function mlr_origin(y::Array{Float64,1}, X::Array{Float64,2}, βinit=nothing)
   if βinit == nothing
     β = inv(X'*X)*X'*y;
   else
-    β = βinit[:];
+    β += βinit;
   end
   ε = y-X*β;
   hε = 1.144 * std(ε) / (N^(0.2));
@@ -96,7 +96,7 @@ function mlr(y::Array{Float64,1}, X::Array{Float64,2}, βinit=nothing)
   if βinit == nothing
     β = inv(X'*X)*X'*y;
   else
-    β = βinit[:];
+    β += βinit;
   end
   h = 1.144 * std(y-X*β) / (N^(0.2));
 

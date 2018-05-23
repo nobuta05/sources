@@ -16,7 +16,7 @@ dΦ[8] = (x,t) -> ( 105-420*x^2/t+210*((x^2)/t)^2-28*((x^2)/t)^3+((x^2)/t)^4 )*p
 dΦ[9] = (x,t) -> x*( -945+1260*x^2/t-378*((x^2)/t)^2+36*((x^2)/t)^3-((x^2)/t)^4 )*phi(x,t)/(t^5)
 dΦ[10] = (x,t) -> ( -945+4725*x^2/t-3150*((x^2)/t)^2+630*((x^2)/t)^3-45*((x^2)/t)^4+((x^2)/t)^5 )*phi(x,t)/(t^5)
 
-function diffusion_h(xs,ε=0.001)
+function diffusion_h(xs,ε=0.1)
   const loop = 100;
   const L = 5;
   t = ε;
@@ -45,7 +45,7 @@ function diffusion_h(xs,ε=0.001)
       ts[l-1] = ( ( sqrt(2)+0.5^(l-1) )*prod(1:2:(2l-3)) / ( 3*N*sqrt(π)*ints[l] ) )^( 2/( 2l+1 ) );
     end
     tnxt = ξ*ts[1];
-    if norm(tnxt - t) < ε && k > 10
+    if norm(tnxt - t) < 10e-4 && k > 10
       t = tnxt;
       break;
     else
