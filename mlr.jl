@@ -78,11 +78,9 @@ function mlr_origin(y::Array{Float64,1}, X::Array{Float64,2}, βinit=nothing)
     ## optimize h
     # hε = 1.144 * std(ε) / (N^(0.2));
     hε = diffusion_h(ε);
-    println("\thε: $(hε)");
     m = mem(estimated(ε,hε));
     h = hopt(ε,m,hε,X,p);
-    println("h: $(h)");
-
+    
     # judge
     if norm(βnxt-β) < EPS
       β .= βnxt;
