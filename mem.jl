@@ -5,18 +5,18 @@ srand(100);
 # 詳しい計算はpdf『MEMAlgorithm.pdf』を参照
 
 # function mem(d::Sampleable, x=nothing, N::Int64=10)
-function mem(d, x=nothing, N::Int64=30)
+function mem(d, x=nothing, N::Int64=5)
   comps = components(d);
   prior = probs(d);
   K = length(prior);
   μs = map(comp->mean(comp), comps);
   σs = map(comp->std(comp), comps);
   σ2s = σs.^2;
-  
+
   function mem_search(d, xinit)
     const Loop = 100;
-    const EPS = 10e-5;
-    x = 0.0;
+    const EPS = 10e-6;
+    x = xinit;
 
     for i in 1:Loop
       # E-Step
@@ -26,7 +26,7 @@ function mem(d, x=nothing, N::Int64=30)
       numerator = sum( (ps.*μs)./σ2s );
       denominator = sum(ps./σ2s);
       xnxt = numerator / denominator;
-
+      
       if norm(xnxt - x) < EPS
         x = xnxt;
         break;
