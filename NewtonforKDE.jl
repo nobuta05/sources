@@ -2,7 +2,7 @@ srand(100);
 using StatsBase;
 include("/home/nobuta05/Gits/sources/HSM.jl");
 
-function NewtonforKDE2(xs)
+function NewtonforKDE(xs)
   const Loop = 100;
   const ϵ = 10e-7;
   N=length(xs);
