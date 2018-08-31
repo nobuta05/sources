@@ -1,5 +1,5 @@
 # Half-Sample Mode
-function HSM(xs; issort=false)
+function HSM(xs::Array{Float64,1}; issort=false)::Float64
   N = length(xs);
   if N==1
     return xs[1];
