@@ -4,7 +4,7 @@ include(homedir()*"/Gits/sources/MAD.jl");
 
 function NewtonforKDE(xs::Array{Float64,1})::Float64
   const Loop = 100;
-  const ϵ = 10e-7;
+  const ϵ = 10e-10;
   N=length(xs);
   h=1.144*MAD(xs)*N^(-0.2);
   xⁿ=HSM(xs);
@@ -39,13 +39,13 @@ function NewtonforKDE(xs::Array{Float64,1})::Float64
       xⁿ = xˢ;
       break;
     elseif xˢ>maximum(abs.(xs))
-      xⁿ=0.;
+      xⁿ=mean(xs);
       break;
     else
       xⁿ = xˢ;
     end
   end
-  
+
 
   return xⁿ;
 end
