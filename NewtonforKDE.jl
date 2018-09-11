@@ -38,8 +38,8 @@ function NewtonforKDE(xs::Array{Float64,1})::Float64
     if abs(xˢ-xⁿ) < ϵ
       xⁿ = xˢ;
       break;
-    elseif xˢ>maximum(abs.(xs))
-      xⁿ=mean(xs);
+    elseif abs(xˢ)>maximum(abs.(xs)) || isnan(xˢ)
+      xⁿ=HSM(xs);
       break;
     else
       xⁿ = xˢ;
