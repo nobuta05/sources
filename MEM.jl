@@ -1,7 +1,7 @@
 include(homedir()*"/Gits/sources/MAD.jl");
 include(homedir()*"/Gits/sources/HSM.jl");
 
-function MEM(xs::Array{Float64,1};x=nothing)::Float64
+function MEM(xs;x=nothing)::Float64
   function ϕ(z::Float64)::Float64
     exp(-z*z*0.5) / sqrt(2π)
   end
