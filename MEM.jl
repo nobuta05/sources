@@ -16,7 +16,7 @@ function MEM(xs;x=nothing)::Float64
   end
 
   const N=length(xs);
-  const h=1.144*MAD(xs)*N^(-0.2);
+  const h=max(1.144*MAD(xs)*N^(-0.2), 1e-10);
   xⁿ=x;
   for l in 1:Loop
     q=ϕh.(xs.-xⁿ,h);

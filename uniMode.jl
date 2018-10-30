@@ -11,7 +11,7 @@ function uniMode(xs)::Float64
   end
 
   N=length(xs);
-  h=1.144*mad(xs,normalize=true)*N^(-0.2);
+  h=max(1.144*mad(xs,normalize=true)*N^(-0.2), 1e-10);
   hsm=HSM(xs);
   ntn=NewtonforKDE(xs,x=hsm);
   if sum(ϕh.(xs.-hsm,h)) > sum(ϕh.(xs.-ntn,h))

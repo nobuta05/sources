@@ -6,7 +6,7 @@ function NewtonforKDE(xs; x=nothing)::Float64
   const ϵ = 10e-10;
   const BORDER=maximum(abs.(xs));
   N=length(xs);
-  h=1.144*mad(xs,normalize=true)*N^(-0.2);
+  h=max(1.144*mad(xs,normalize=true)*N^(-0.2), 1e-10);
   xⁿ= x==nothing ? HSM(xs) : x;
   xˢ=0.0;
 
