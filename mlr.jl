@@ -1,5 +1,5 @@
 using StatsBase, Distributions;
-include("/home/nobuta05/Gits/sources/diffusion.jl");
+# include("/home/nobuta05/Gits/sources/diffusion.jl");
 include("/home/nobuta05/Gits/sources/mem.jl");
 
 function generate(N=500)
@@ -74,10 +74,11 @@ function mlr_origin(y::Array{Float64,1}, X::Array{Float64,2}, βinit=nothing)
     ε .= y .- X*βnxt;
     ## optimize h
     # hε = 1.144 * std(ε) / (N^(0.2));
-    hε = diffusion_h(ε);
+    hϵ = 1.144 * mad(ϵ) * N^(-0.2);
+    # hε = diffusion_h(ε);
     m = mem(estimated(ε,hε));
     h = hopt(ε,m,hε,X,p);
-    
+
     # judge
     if norm(βnxt-β) < EPS
       β .= βnxt;
@@ -203,7 +204,7 @@ function mlr_hfix(y::Array{Float64,1}, X::Array{Float64,2}, h, βinit=nothing)
   else
     β = βinit[:];
   end
-  
+
   Q = zeros(N);
   ε = zeros(N);
   W = zeros(N,N);
@@ -231,7 +232,7 @@ function mlr_hfix(y::Array{Float64,1}, X::Array{Float64,2}, h, βinit=nothing)
     # βnxt .= (X'*W*X)\(X'*W*y);
     βnxt .= (X'*(X.*Q)) \ (X'*(Q.*y));
     ε .= y .- X*βnxt;
-    
+
     # judge
     if norm(βnxt-β) < EPS
       β .= βnxt;
@@ -253,7 +254,7 @@ function mlr_hs(y::Array{Float64,1}, X::Array{Float64,2}, hsinit::Array{Float64,
   else
     β = βinit[:];
   end
-  
+
   Q = zeros(N);
   ε = zeros(N);
   W = zeros(N,N);
@@ -282,7 +283,7 @@ function mlr_hs(y::Array{Float64,1}, X::Array{Float64,2}, hsinit::Array{Float64,
       # βnxt .= (X'*W*X)\(X'*W*y);
       βnxt .= (X'*(X.*Q)) \ (X'*(Q.*y));
       ε .= y .- X*βnxt;
-    
+
       # judge
       if norm(βnxt-β) < EPS
         β .= βnxt;
@@ -306,7 +307,7 @@ function mlr_hs_comp(y::Array{Float64,1}, X::Array{Float64,2}, hsinit::Array{Flo
   else
     β = βinit[:];
   end
-  
+
   Q = zeros(N);
   ε = zeros(N);
   W = zeros(N,N);
@@ -335,7 +336,7 @@ function mlr_hs_comp(y::Array{Float64,1}, X::Array{Float64,2}, hsinit::Array{Flo
       # βnxt .= (X'*W*X)\(X'*W*y);
       βnxt .= (X'*(X.*Q)) \ (X'*(Q.*y));
       ε .= y .- X*βnxt;
-    
+
       # judge
       if norm(βnxt-β) < EPS
         β .= βnxt;

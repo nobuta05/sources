@@ -8,7 +8,7 @@ function MEM(xs;x=nothing)::Float64
   function ϕh(z::Float64,h::Float64)::Float64
     ϕ(z/h)/h
   end
-  ϵ=1e-8;
+  ϵ=1e-10;
   Loop=100;
 
   if x==nothing
